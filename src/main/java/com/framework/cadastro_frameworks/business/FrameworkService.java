@@ -20,7 +20,7 @@ public class FrameworkService {
         return repository.findByTecnology(tecnology).orElseThrow(() -> new RuntimeException("tecnology not found"));
     }
 
-    public void deleteByTecnology(String tecnology){
+    public void deleteFrameworkByTecnology(String tecnology){
         repository.deleteByTecnology(tecnology);
     }
 
@@ -29,6 +29,7 @@ public class FrameworkService {
         Framework updatedFramework = Framework.builder().tecnology(framework.getTecnology() != null ? framework.getTecnology() : frameworkEntity.getTecnology()).
                 name(framework.getName() != null ? framework.getName() : frameworkEntity.getName()).id(frameworkEntity.getId()).
                 highestVersion(framework.getHighestVersion() != null ? framework.getHighestVersion() : frameworkEntity.getHighestVersion()).build();
+        repository.saveAndFlush(updatedFramework);
     }
 
 }
