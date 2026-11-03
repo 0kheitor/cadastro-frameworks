@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Frameworks | API REST</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <main class="container">
+        <!-- Cabeçalho -->
+        <header class="header">
+            <h1>Cadastro de Frameworks</h1>
+            <p>Interface de Consumo REST &bull; Métodos HTTP Assíncronos via Fetch API</p>
+            <div class="http-badges">
+                <span class="http-badge badge-get">GET</span>
+                <span class="http-badge badge-post">POST</span>
+                <span class="http-badge badge-put">PUT</span>
+                <span class="http-badge badge-delete">DELETE</span>
+            </div>
+        </header>
+
+        <!-- Mensagens de Feedback (Sucesso / Erro) -->
+        <div id="feedback-message" class="feedback-message" role="alert" aria-live="polite">
+            <span id="feedback-text"></span>
+            <button id="feedback-close" class="feedback-close" aria-label="Fechar mensagem">&times;</button>
+        </div>
+
+        <!-- Navegação em Abas (CRUD) -->
+        <nav class="nav-tabs" role="tablist">
+            <button class="tab-btn active" data-tab="get" role="tab" aria-selected="true">
+                <span class="http-badge badge-get">GET</span> Consultar
+            </button>
+            <button class="tab-btn" data-tab="post" role="tab" aria-selected="false">
+                <span class="http-badge badge-post">POST</span> Cadastrar
+            </button>
+            <button class="tab-btn" data-tab="put" role="tab" aria-selected="false">
+                <span class="http-badge badge-put">PUT</span> Atualizar
+            </button>
+            <button class="tab-btn" data-tab="delete" role="tab" aria-selected="false">
+                <span class="http-badge badge-delete">DELETE</span> Excluir
+            </button>
+        </nav>
+
+        <!-- =================================================================
+             ABA 1: CONSULTAR (GET)
+             ================================================================= -->
+        <section id="tab-get" class="tab-content active" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">
+                            <span class="http-badge badge-get">GET</span> /framework
+                        </h2>
+                        <p class="card-subtitle">Busca um framework cadastrado pelo nome da tecnologia associada.</p>
+                    </div>
+                </div>
+
+                <form id="form-get">
+                    <div class="form-group">
+                        <label for="get-tecnology">Tecnologia *</label>
+                        <input type="text" id="get-tecnology" class="form-control" placeholder="Ex: Java, Python, JavaScript" required>
+                        <span class="input-help">Parâmetro de consulta enviado via Query String: <code>?tecnology=...</code></span>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <span>Buscar Framework</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Resultado da Consulta GET -->
+                <div id="get-result-box" class="result-box">
+                    <div class="result-title">
+                        <span>Dados Retornados da API</span>
+                        <span class="http-badge badge-get">200 OK</span>
+                    </div>
+
+                    <table class="data-table">
+                        <tbody>
+                            <tr>
+                                <th>ID (Identificador)</th>
+                                <td id="result-id">-</td>
+                            </tr>
+                            <tr>
+                                <th>Nome do Framework</th>
+                                <td id="result-name">-</td>
+                            </tr>
+                            <tr>
+                                <th>Tecnologia</th>
+                                <td id="result-tecnology">-</td>
+                            </tr>
+                            <tr>
+                                <th>Tipo de Projeto</th>
+                                <td id="result-projectType">-</td>
+                            </tr>
+                            <tr>
+                                <th>Versão Mais Recente</th>
+                                <td id="result-highestVersion">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="result-actions">
+                        <button type="button" id="btn-result-edit" class="btn btn-warning">
+                            <span>Carregar para Edição (PUT)</span>
+                        </button>
+                        <button type="button" id="btn-result-delete" class="btn btn-danger">
+                            <span>Excluir (DELETE)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             ABA 2: CADASTRAR (POST)
+             ================================================================= -->
+        <section id="tab-post" class="tab-content" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">
+                            <span class="http-badge badge-post">POST</span> /framework
+                        </h2>
+                        <p class="card-subtitle">Envia um novo objeto Framework serializado em formato JSON no corpo da requisição.</p>
+                    </div>
+                </div>
+
+                <form id="form-post">
+                    <div class="form-grid grid-2">
+                        <div class="form-group">
+                            <label for="post-name">Nome do Framework *</label>
+                            <input type="text" id="post-name" class="form-control" placeholder="Ex: Spring Boot" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="post-tecnology">Tecnologia *</label>
+                            <input type="text" id="post-tecnology" class="form-control" placeholder="Ex: Java" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid grid-2" style="margin-top: 16px;">
+                        <div class="form-group">
+                            <label for="post-projectType">Tipo de Projeto</label>
+                            <input type="text" id="post-projectType" class="form-control" placeholder="Ex: API RESTful, Web MVC">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="post-highestVersion">Versão Mais Recente</label>
+                            <input type="text" id="post-highestVersion" class="form-control" placeholder="Ex: 3.4.1">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-outline">Limpar</button>
+                        <button type="submit" class="btn btn-success">
+                            <span>Cadastrar Framework</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             ABA 3: ATUALIZAR (PUT)
+             ================================================================= -->
+        <section id="tab-put" class="tab-content" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">
+                            <span class="http-badge badge-put">PUT</span> /framework?id={id}
+                        </h2>
+                        <p class="card-subtitle">Atualiza os dados de um framework existente utilizando o seu ID.</p>
+                    </div>
+                </div>
+
+                <form id="form-put">
+                    <div class="form-group">
+                        <label for="put-id">ID do Framework (Obrigatório) *</label>
+                        <input type="number" id="put-id" class="form-control" placeholder="Ex: 1" required>
+                        <span class="input-help">Parâmetro de identificação enviado via Query String: <code>?id=...</code></span>
+                    </div>
+
+                    <div class="form-grid grid-2" style="margin-top: 16px;">
+                        <div class="form-group">
+                            <label for="put-name">Nome do Framework</label>
+                            <input type="text" id="put-name" class="form-control" placeholder="Ex: Spring Boot 3">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="put-tecnology">Tecnologia</label>
+                            <input type="text" id="put-tecnology" class="form-control" placeholder="Ex: Java">
+                        </div>
+                    </div>
+
+                    <div class="form-grid grid-2" style="margin-top: 16px;">
+                        <div class="form-group">
+                            <label for="put-projectType">Tipo de Projeto</label>
+                            <input type="text" id="put-projectType" class="form-control" placeholder="Ex: Microserviços">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="put-highestVersion">Versão Mais Recente</label>
+                            <input type="text" id="put-highestVersion" class="form-control" placeholder="Ex: 3.4.2">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-outline">Limpar</button>
+                        <button type="submit" class="btn btn-warning">
+                            <span>Salvar Alterações</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             ABA 4: EXCLUIR (DELETE)
+             ================================================================= -->
+        <section id="tab-delete" class="tab-content" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">
+                            <span class="http-badge badge-delete">DELETE</span> /framework
+                        </h2>
+                        <p class="card-subtitle">Remove um registro de framework com base na tecnologia associada.</p>
+                    </div>
+                </div>
+
+                <form id="form-delete">
+                    <div class="form-group">
+                        <label for="delete-tecnology">Tecnologia para Exclusão *</label>
+                        <input type="text" id="delete-tecnology" class="form-control" placeholder="Ex: Java" required>
+                        <span class="input-help">Parâmetro de consulta enviado via Query String: <code>?tecnology=...</code></span>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-danger">
+                            <span>Excluir Framework</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Rodapé -->
+        <footer class="footer">
+            <p>Projeto de Avaliação Bimestral &bull; Consumo REST com Fetch API assíncrona</p>
+        </footer>
+    </main>
+
+    <!-- Scripts de Integração e Comportamento -->
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
